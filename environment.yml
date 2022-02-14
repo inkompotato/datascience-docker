@@ -10,7 +10,6 @@ dependencies:
   - pip:
     - scipy
     - scikit-learn
-    - lets-plot
     - numpy
     - pandas
     - plotly

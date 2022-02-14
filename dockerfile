@@ -29,8 +29,8 @@ RUN apt-get update \
     && echo "Installed utilities"
 RUN conda install -y -c jetbrains kotlin-jupyter-kernel && echo "Kotlin Jupyter kernel installed via conda"
 
-# Jupyter Extension
-RUN conda install -y -c conda-forge jupyterlab jupyterlab-git jupyterlab_widgets ipywidgets && echo "Installed jupyter lab extensions"
+# Jupyter Extension (not needed when running vscode)
+# RUN conda install -y -c conda-forge jupyterlab jupyterlab-git jupyterlab_widgets ipywidgets && echo "Installed jupyter lab extensions"
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID

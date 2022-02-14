@@ -4,3 +4,14 @@ channels:
   - defaults
 dependencies:
   - python
+  - scipy
+  - scikit-learn
+  - pytoch
+  - matplotlib
+  - lets-plot
+  - seaborn
+  - maturin
+  - pip:
+    - numpy
+    - pandas
+    - plotly

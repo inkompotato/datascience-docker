@@ -1,6 +1,6 @@
 name: myenv
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - python
-  - torch

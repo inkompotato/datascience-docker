@@ -35,7 +35,9 @@ RUN conda install -y -c conda-forge jupyterlab jupyterlab-git jupyterlab_widgets
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
 
-RUN conda env create
+COPY environment.yml .
+
+RUN conda env create -f environment.yml
 
 ENV NOTEBOOK_ARGS="--no-browser"
 ENV JUPYTER_TOKEN=${TOKEN}

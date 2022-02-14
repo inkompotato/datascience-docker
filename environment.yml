@@ -4,14 +4,16 @@ channels:
   - defaults
 dependencies:
   - python
-  - scipy
-  - scikit-learn
-  - pytoch
-  - matplotlib
-  - lets-plot
-  - seaborn
+  - nb_conda_kernels
   - maturin
+  - pip
   - pip:
+    - scipy
+    - scikit-learn
+    - lets-plot
     - numpy
     - pandas
     - plotly
+    - torch
+    - torchvision
+    - torchaudio

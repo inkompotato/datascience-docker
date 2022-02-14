@@ -13,6 +13,4 @@ dependencies:
     - numpy
     - pandas
     - plotly
-    - torch
-    - torchvision
-    - torchaudio
+    - torch torchvision torchaudio

@@ -31,6 +31,7 @@ RUN conda install -y -c jetbrains kotlin-jupyter-kernel && echo "Kotlin Jupyter 
 
 # Jupyter Extension (not needed when running vscode)
 # RUN conda install -y -c conda-forge jupyterlab jupyterlab-git jupyterlab_widgets ipywidgets && echo "Installed jupyter lab extensions"
+RUN sysctl -w fs.inotify.max_user_watches=524288
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID

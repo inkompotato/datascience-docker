@@ -14,7 +14,9 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
   cmake \
   build-essential \
   curl \
-  libarchive-dev
+  libarchive-dev \
+  pkg-config
+  
 USER $NB_UID
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --component rust-src
 ENV PATH="${HOME}/.cargo/bin:${PATH}"

@@ -1,6 +1,17 @@
 version: "3.9"
 services:
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - 7777:7777
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl/:/etc/nginx/ssl/
+    networks:
+      - internal-network
   vscode:
+    container_name: vscode
     build: .
     restart: always
     ports: 
@@ -9,3 +20,8 @@ services:
       - '/home/jan/work/:/home/jovyan/work/'
     environment:
       TOKEN: "token"
+    networks:
+      - internal-network
+
+networks:
+  internal-network:

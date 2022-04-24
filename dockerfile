@@ -29,14 +29,37 @@ USER root
 
 # Kotlin Kernel
 RUN apt-get update \
-    && apt-get install -y openjdk-8-jre \
-    && echo "Installed openjdk 8" \
+    && apt-get install -y openjdk-11-jre ca-certificates-java  \
+    && echo "Installed openjdk 11" \
     && apt-get install -y git unzip \
     && echo "Installed utilities"
 RUN conda install -y -c jetbrains kotlin-jupyter-kernel && echo "Kotlin Jupyter kernel installed via conda"
 
-# Jupyter Extension (not needed when running vscode)
-# RUN conda install -y -c conda-forge jupyterlab jupyterlab-git jupyterlab_widgets ipywidgets && echo "Installed jupyter lab extensions"
+# Spark
+ARG spark_version="3.2.1"
+ARG hadoop_version="3.2"
+
+ENV APACHE_SPARK_VERSION="${spark_version}" \
+    HADOOP_VERSION="${hadoop_version}"
+
+WORKDIR /tmp
+RUN wget -q "https://archive.apache.org/dist/spark/spark-${APACHE_SPARK_VERSION}/spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
+    tar xzf "spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" -C /usr/local --owner root --group root --no-same-owner && \
+    rm "spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz"
+    
+WORKDIR /usr/local
+ENV SPARK_HOME=/usr/local/spark
+ENV SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M --driver-java-options=-Dlog4j.logLevel=info" \
+    PATH="${PATH}:${SPARK_HOME}/bin"
+
+RUN ln -s "spark-${APACHE_SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}" spark && \
+    mkdir -p /usr/local/bin/before-notebook.d && \
+    ln -s "${SPARK_HOME}/sbin/spark-config.sh" /usr/local/bin/before-notebook.d/spark-config.sh
+RUN cp -p "${SPARK_HOME}/conf/spark-defaults.conf.template" "${SPARK_HOME}/conf/spark-defaults.conf" && \
+    echo 'spark.driver.extraJavaOptions -Dio.netty.tryReflectionSetAccessible=true' >> "${SPARK_HOME}/conf/spark-defaults.conf" && \
+    echo 'spark.executor.extraJavaOptions -Dio.netty.tryReflectionSetAccessible=true' >> "${SPARK_HOME}/conf/spark-defaults.conf"
+    
+RUN conda install -c conda-forge spylon-kernel
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
@@ -44,6 +67,7 @@ USER $NB_UID
 COPY environment.yml .
 
 RUN conda env create -f environment.yml
+RUN python -m spylon_kernel install
 
 ENV NOTEBOOK_ARGS="--no-browser"
 ENV JUPYTER_TOKEN=${TOKEN}

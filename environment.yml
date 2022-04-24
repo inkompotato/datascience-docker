@@ -8,9 +8,3 @@ dependencies:
   - maturin
   - pytorch
   - pip
-  - pip:
-    - scipy
-    - scikit-learn
-    - numpy
-    - pandas
-    - plotly

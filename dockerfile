@@ -60,6 +60,7 @@ RUN cp -p "${SPARK_HOME}/conf/spark-defaults.conf.template" "${SPARK_HOME}/conf/
     echo 'spark.executor.extraJavaOptions -Dio.netty.tryReflectionSetAccessible=true' >> "${SPARK_HOME}/conf/spark-defaults.conf"
     
 RUN conda install -c conda-forge spylon-kernel
+RUN python -m spylon_kernel install
 
 # Switch back to jovyan to avoid accidental container runs as root
 USER $NB_UID
@@ -67,7 +68,6 @@ USER $NB_UID
 COPY environment.yml .
 
 RUN conda env create -f environment.yml
-RUN python -m spylon_kernel install
 
 ENV NOTEBOOK_ARGS="--no-browser"
 ENV JUPYTER_TOKEN=${TOKEN}
